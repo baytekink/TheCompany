@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OnlineShop.Products.Domain.Entity\OnlineShop.Products.Domain.Entity.csproj" />
     <ProjectReference Include="..\OnlineShop.Products.EntityFrameworkCore\OnlineShop.Products.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
