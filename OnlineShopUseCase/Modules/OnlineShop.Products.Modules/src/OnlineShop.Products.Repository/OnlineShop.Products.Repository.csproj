@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>    
+	<AnalysisLevel>latest-All</AnalysisLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+	<PackageReference Include="TheCompany.EntityFrameworkCore.Common" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OnlineShop.Products.Domain.Entity\OnlineShop.Products.Domain.Entity.csproj" />
+    <ProjectReference Include="..\OnlineShop.Products.EntityFrameworkCore\OnlineShop.Products.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+
+</Project>

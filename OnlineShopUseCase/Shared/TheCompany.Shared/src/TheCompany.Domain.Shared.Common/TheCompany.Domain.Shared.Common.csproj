@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings> 
+	<PackageId>TheCompany.Domain.Shared.Common</PackageId>
+	<Version>1.0.4</Version>
+	<Authors>Kemal</Authors>
+	<Company>TheCompany</Company>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Constants\" />
+  </ItemGroup>
+
+</Project>

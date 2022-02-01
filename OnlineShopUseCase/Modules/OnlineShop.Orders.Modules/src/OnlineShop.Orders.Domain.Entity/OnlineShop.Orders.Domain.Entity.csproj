@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>    
+	<AnalysisLevel>latest-All</AnalysisLevel>
+  </PropertyGroup>
+
+   <ItemGroup>
+    <PackageReference Include="TheCompany.Domain.Entity.Common" Version="1.0.2" />
+  </ItemGroup>
+
+   <ItemGroup>
+     <ProjectReference Include="..\OnlineShop.Orders.Domain.Shared\OnlineShop.Orders.Domain.Shared.csproj" />
+   </ItemGroup>
+</Project>
