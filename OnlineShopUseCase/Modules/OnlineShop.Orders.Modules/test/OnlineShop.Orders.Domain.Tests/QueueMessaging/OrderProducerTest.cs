@@ -53,11 +53,13 @@ namespace OnlineShop.Orders.Domain.QueueMessaging
                  }
             };
 
+            var cancelToken = new System.Threading.CancellationToken();
+            _mockProviderEndPoint.Setup(p => p.Send(producedObj, cancelToken));
             _mockProvider.Setup(repo => repo.GetSendEndpoint(new($"queue:{QueueMessagingOrderSettings.OrderCreatedEventQueue}"))).Returns(Task.FromResult(_mockProviderEndPoint.Object));
 
             await producer.SendAsync(producedObj);
 
-            Assert.True(true);
+            _mockProviderEndPoint.Verify(mock => mock.Send(producedObj, cancelToken), Times.Once());
         }
 
         #endregion

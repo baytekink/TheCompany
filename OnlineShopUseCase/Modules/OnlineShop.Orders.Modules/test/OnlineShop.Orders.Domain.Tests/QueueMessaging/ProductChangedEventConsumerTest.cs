@@ -40,11 +40,11 @@ namespace OnlineShop.Orders.Domain.QueueMessaging
             consumer = new ProductChangedEventConsumer(_mockProvider.Object, mapper, dateCreator);
         }
 
-        #region ConsumeAsync
+         #region ConsumeAsync
         [Fact]
         public async Task ConsumeUpdateAsync_ActionExecutes_ReturnsSuccess()
         {
-            Product Product = new()
+            Product product = new()
             {
                 Id = Guid.NewGuid(),
                 Title = "Apple iphone",
@@ -58,12 +58,12 @@ namespace OnlineShop.Orders.Domain.QueueMessaging
                 UpdateTime = DateTime.Now,
             };
 
-            _mockProvider.Setup(repo => repo.FindOneByConditionAsync(It.IsAny<Expression<Func<Product, bool>>>())).Returns(Task.FromResult(Product));
-            _mockProvider.Setup(repo => repo.UpdateWithSaveAsync(Product));
+            _mockProvider.Setup(repo => repo.FindOneByConditionAsync(It.IsAny<Expression<Func<Product, bool>>>())).Returns(Task.FromResult(product));
+            _mockProvider.Setup(repo => repo.UpdateWithSaveAsync(product));
 
             mockContext.SetupGet(m => m.Message).Returns(new ProductChangedObject()
             {
-                Id = Product.Id,
+                Id = product.Id,
                 Title = "Apple iphone",
                 Brand = "Apple",
                 Model = "Iphone",
@@ -74,34 +74,18 @@ namespace OnlineShop.Orders.Domain.QueueMessaging
 
             await consumer.Consume(mockContext.Object);
 
-            Assert.True(true);
+            _mockProvider.Verify(mock => mock.UpdateWithSaveAsync(product), Times.Once());
         }
 
         [Fact]
         public async Task ConsumeAddAsync_ActionExecutes_ReturnsSuccess()
         {
-            Product cNull = null;
-
-            Product Product = new()
-            {
-                Id = Guid.NewGuid(),
-                Title = "Apple iphone",
-                Brand = "Apple",
-                Model = "Iphone",
-                CreateTime = DateTime.Now,
-                CreateUserId = Guid.NewGuid(),
-                Description = "The description",
-                IsDeleted = 0,
-                ModifyUserId = Guid.NewGuid(),
-                UpdateTime = DateTime.Now,
-            };
-
-            _mockProvider.Setup(repo => repo.FindOneByConditionAsync(It.IsAny<Expression<Func<Product, bool>>>())).Returns(Task.FromResult(cNull));
-            _mockProvider.Setup(repo => repo.CreateWithSaveAsync(Product));
+            _mockProvider.Setup(repo => repo.FindOneByConditionAsync(It.IsAny<Expression<Func<Product, bool>>>())).Returns(Task.FromResult((Product)null));
+            _mockProvider.Setup(repo => repo.CreateWithSaveAsync(It.IsAny<Product>()));
 
             mockContext.SetupGet(m => m.Message).Returns(new ProductChangedObject()
             {
-                Id = Product.Id,
+                Id = Guid.NewGuid(),
                 Title = "Apple iphone",
                 Brand = "Apple",
                 Model = "Iphone",
@@ -112,7 +96,7 @@ namespace OnlineShop.Orders.Domain.QueueMessaging
 
             await consumer.Consume(mockContext.Object);
 
-            Assert.True(true);
+            _mockProvider.Verify(mock => mock.CreateWithSaveAsync(It.IsAny<Product>()), Times.Once());
         }
 
         #endregion

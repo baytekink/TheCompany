@@ -16,15 +16,15 @@ using System.Collections.Generic;
 namespace OnlineShop.Orders.Repository.Tests.Repository
 {
     public class OrderRepositoryQueryTest
-    { 
+    {
         readonly Mock<INoSqlService> mongoService;
         readonly OrderRepositoryQuery orderRepo;
-        readonly Mock<IFakeMongoCollection<OrderFulFilledVM>> _fakeMongoCollection;
+        readonly Mock<IMongoCollection<OrderFulFilledVM>> _moqMongoCollection;
 
         public OrderRepositoryQueryTest()
         {
-            _fakeMongoCollection = new Mock<IFakeMongoCollection<OrderFulFilledVM>>();
-             
+            _moqMongoCollection = new Mock<IMongoCollection<OrderFulFilledVM>>();
+
             mongoService = new Mock<INoSqlService>();
 
             orderRepo = new OrderRepositoryQuery(mongoService.Object);
@@ -62,31 +62,16 @@ namespace OnlineShop.Orders.Repository.Tests.Repository
                      }
                  }
             };
-
-            mongoService.Setup(a => a.GetCollection<OrderFulFilledVM>()).Returns(_fakeMongoCollection.Object);
+             
+            _moqMongoCollection.Setup(p => p.InsertOneAsync(order, null, default));
+            mongoService.Setup(a => a.GetCollection<OrderFulFilledVM>()).Returns(_moqMongoCollection.Object);
 
             await orderRepo.CreateOrderFulFilledVM(order);
-            Assert.True(true);
+
+            _moqMongoCollection.Verify(mock => mock.InsertOneAsync(order, null, default), Times.Once());            
         }
 
         #endregion
-        
-    }
 
-    public interface IFakeMongoCollection<T> : IMongoCollection<T>
-    {
-        Task InsertOneAsync(T document);
-
-        Task<List<T>> ToListAsync<TDocument>();
-
-        IFindFluent<BsonDocument, BsonDocument> Find(FilterDefinition<BsonDocument> filter, FindOptions options);
-
-        IFindFluent<BsonDocument, BsonDocument> Project(ProjectionDefinition<BsonDocument, BsonDocument> projection);
-
-        IFindFluent<BsonDocument, BsonDocument> Skip(int skip);
-         
-        IFindFluent<BsonDocument, BsonDocument> Limit(int limit);
-
-        IFindFluent<BsonDocument, BsonDocument> Sort(SortDefinition<BsonDocument> sort);
-    }
+    } 
 }

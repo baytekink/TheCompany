@@ -32,8 +32,8 @@ namespace OnlineShop.Products.Domain.Handlers.CommandHandlers
         [Fact]
         public async Task SendAsync_ActionExecutes_ReturnsSuccess()
         {
-            var producedObj = new ProductChangedObject()
-            {
+             var producedObj = new ProductChangedObject()
+             {
                 Id = Guid.NewGuid(),
                 Title = "Stroller",
                 Description = "Carries your baby in safe",
@@ -41,13 +41,15 @@ namespace OnlineShop.Products.Domain.Handlers.CommandHandlers
                 Model = "Zigi",
                 Cost = 10,
                 Price = 15
-            };
+             };
 
+            var cancelToken = new System.Threading.CancellationToken();
+            _mockProviderEndPoint.Setup(p => p.Send(producedObj, cancelToken));
             _mockProvider.Setup(repo => repo.GetSendEndpoint(new($"queue:{QueueMessagingSettings.ProductChangedEventQueue}"))).Returns(Task.FromResult(_mockProviderEndPoint.Object));
 
             await producer.SendAsync(producedObj);
 
-            Assert.True(true);
+            _mockProviderEndPoint.Verify(mock => mock.Send(producedObj, cancelToken), Times.Once());
         }
 
         #endregion

@@ -67,38 +67,27 @@ namespace OnlineShop.Orders.Domain.QueueMessaging
 
             await consumer.Consume(mockContext.Object);
 
-            Assert.True(true);
+            _mockProvider.Verify(mock => mock.UpdateWithSaveAsync(customer), Times.Once());
         }
 
         [Fact]
         public async Task ConsumeAddAsync_ActionExecutes_ReturnsSuccess()
-        {
-            Customer cNull = null;
+        {  
+            _mockProvider.Setup(repo => repo.FindOneByConditionAsync(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(Task.FromResult((Customer)null));
+            _mockProvider.Setup(repo => repo.CreateWithSaveAsync(It.IsAny<Customer>()));
 
-            Customer customer = new()
+            mockContext.SetupGet(m => m.Message).Returns(new CustomerChangedObject()
             {
                 Id = Guid.NewGuid(),
                 Name = "Kemal",
                 Surname = "Bey",
                 Address = "The Address",
                 Phone = "11231311"
-            };
-
-            _mockProvider.Setup(repo => repo.FindOneByConditionAsync(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(Task.FromResult(cNull));
-            _mockProvider.Setup(repo => repo.CreateWithSaveAsync(customer));
-
-            mockContext.SetupGet(m => m.Message).Returns(new CustomerChangedObject()
-            {
-                Id = customer.Id,
-                Address = customer.Address,
-                Name = customer.Name,
-                Phone = customer.Phone,
-                Surname = customer.Surname
             });
 
             await consumer.Consume(mockContext.Object);
-
-            Assert.True(true);
+             
+            _mockProvider.Verify(mock => mock.CreateWithSaveAsync(It.IsAny<Customer>()), Times.Once());
         }
 
         #endregion

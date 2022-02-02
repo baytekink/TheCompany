@@ -80,31 +80,12 @@ namespace OnlineShop.Orders.Domain.QueueMessaging
                 Phone = "1231231",
                 UpdateTime = DateTime.Now,
             };
-
-            OrderFulFilledVM fulFilledObj = new()
-            {
-                Id = product.Id,
-                CreateTime = DateTime.Now,
-                CustomerId = customer.Id,
-                TotalPrice = 100,
-                OrderStatus = Orders.Domain.Shared.Enums.OrderStatus.Suspend,
-                OrderItems = new List<OrderItemVM>()
-                {
-                    new OrderItemVM(){
-                        Count = 1,
-                        Price = 100,
-                        ProductId = product.Id,
-                        Product = mapper.Map<ProductVM>( product)
-                    }
-                },
-                Customer = mapper.Map<CustomerVM>(customer)
-            };
-
+  
             mockProductRepo.Setup(repo => repo.FindByConditionAsync(It.IsAny<Expression<Func<Product, bool>>>())).Returns(Task.FromResult((IReadOnlyList<Product>)productsList));
 
             mockCustomerRepo.Setup(repo => repo.FindOneByConditionAsync(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(Task.FromResult(customer));
 
-            _mockProvider.Setup(repo => repo.CreateOrderFulFilledVM(fulFilledObj));
+            _mockProvider.Setup(repo => repo.CreateOrderFulFilledVM(It.IsAny<OrderFulFilledVM>()));
 
             mockContext.SetupGet(m => m.Message).Returns(new OrderCreatedObject()
             {
@@ -125,7 +106,7 @@ namespace OnlineShop.Orders.Domain.QueueMessaging
 
             await consumer.Consume(mockContext.Object);
 
-            Assert.True(true);
+            _mockProvider.Verify(mock => mock.CreateOrderFulFilledVM(It.IsAny<OrderFulFilledVM>()), Times.Once());
         }
 
         #endregion
