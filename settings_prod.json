@@ -1,0 +1,12 @@
+{
+"WaitTimeInMilliSeconds": "100",
+"MaxProduceOrderCount": "1",
+"validAfter": "14:09:20.000",
+"TotalSecondsAfterSuccess": "60",
+"ErrorWhenContractNotFound": "1",
+"ThrowErrorWhenSendingMail": "1",
+"BasketMaxCount": "24",
+"toemails": "kbaytekin@smartpulse.io",
+"ForTestIceberg": "0",
+"ExpectedAddDays": "1"
+}
