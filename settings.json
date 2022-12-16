@@ -1,7 +1,7 @@
 {
 "WaitTimeInMilliSeconds": "100",
 "MaxProduceOrderCount": "1",
-"validAfter": "07:09:20.000",
+"validAfter": "10:12:20.000",
 "TotalSecondsAfterSuccess": "60",
 "ErrorWhenContractNotFound": "0",
 "ThrowErrorWhenSendingMail": "0",
